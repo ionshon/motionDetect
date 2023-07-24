@@ -4,7 +4,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.highgui.HighGui;
+//import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import javax.imageio.ImageIO;
@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import static org.opencv.imgcodecs.Imgcodecs.imencode;
+
 
 public final class Main
 {

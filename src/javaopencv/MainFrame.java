@@ -6,6 +6,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.video.BackgroundSubtractorMOG2;
 import org.opencv.videoio.VideoCapture;
+import org.opencv.videoio.Videoio;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -28,6 +29,8 @@ public class MainFrame extends javax.swing.JFrame
 
     System.out.println("Core.NATIVE_LIBRARY_NAME: " + Core.NATIVE_LIBRARY_NAME);
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    System.load( "d:\\Downloads\\opencv\\build\\java\\x64\\" + Core.NATIVE_LIBRARY_NAME + ".dll");
+    System.load( "d:\\Downloads\\opencv\\build\\bin\\opencv_ffmpeg310_64.dll");
   }
 
 
@@ -72,18 +75,18 @@ public class MainFrame extends javax.swing.JFrame
   {
 
     /************* Capture rtsp video stream using OpenCV 3.1 in Java @stackoverflow ******************/
-    MainFrame app = new MainFrame();
+   /* MainFrame app = new MainFrame();
     //Address can be different. Check your cameras manual. :554 a standard RTSP port for cameras but it can be different
     String addressString = "rtsp://192.168.0.25:554/Master-0";
     Mat mat = new Mat();
     VideoCapture capturedVideo = new VideoCapture();
 
     boolean isOpened = capturedVideo.open(addressString);
-    app.openRTSP(isOpened, capturedVideo, mat);
+    app.openRTSP(isOpened, capturedVideo, mat);*/
     /************* Capture rtsp video stream using OpenCV 3.1 in Java @stackoverflow ******************/
 
    /************Capture rtsp video stream using OpenCV 3.1 in Java @stackoverflow *************/
-    VideoCapture cap;
+  /*  VideoCapture cap;
 //    Mat2Image mat2Img = new Mat2Image();
     Mat matFilter = new Mat();
 
@@ -103,18 +106,36 @@ public class MainFrame extends javax.swing.JFrame
     }
     else{
       System.out.println("Camera OK?");
-    }
+    }*/
     /************Capture rtsp video stream using OpenCV 3.1 in Java @stackoverflow *************/
+
+    String RTSP_URL = "rtsp://192.168.0.12:554/Master-0";
+
+    System.setProperty("OPENCV_FFMPEG_CAPTURE_OPTIONS", "rtsp_transport;udp");
+
+    Mat frame = new Mat();
+    VideoCapture cap = new VideoCapture(RTSP_URL, Videoio.CAP_FFMPEG);
+
+    /************https://lindevs.com/capture-rtsp-stream-from-ip-camera-using-opencv *************/
 
     //System.out.println("You clicked the start button!");
 
     if(!begin)
     {
-//      int sourcen = Integer.parseInt(jTextFieldSource1.getText());
-      String sourcen = jTextFieldSource1.getText();
-      System.out.println("Opening source: " + sourcen);
+      int sourcen = Integer.parseInt(jTextFieldSource1.getText());
+//      video = new VideoCapture(sourcen);
+//      String sourcen = jTextFieldSource1.getText();
+//      System.out.println("Opening source: " + sourcen + "video: " + video) ;
 
-      video = new VideoCapture(sourcen);
+
+      if (!cap.isOpened()) {
+        System.out.println("Cannot open RTSP stream");
+        video = new VideoCapture(sourcen);
+      } else {
+        System.out.println("open Success RTSP stream");
+        System.out.println("cap: "+ cap);
+        video = new VideoCapture(RTSP_URL, Videoio.CAP_FFMPEG);
+      }
 
       if(video.isOpened())
       {
@@ -194,7 +215,7 @@ public class MainFrame extends javax.swing.JFrame
           //video.read(frameaux);
           video.retrieve(frameaux);
 
-          System.out.println("frameaux: "+ frameaux + "frame size: " + frame.size() + "frame : " + frame) ;
+          System.out.println("frameaux size: "+ frameaux.size() + ", frame size: " + frame.size() + ",  frame : " + frame) ;
           Imgproc.resize(frameaux, frame, frame.size());
           frame.copyTo(currentFrame);
           
@@ -253,7 +274,7 @@ public class MainFrame extends javax.swing.JFrame
                 //System.out.println("ALARM ENABLED!");
                 Imgproc.putText(currentFrame, "MOTION DETECTED",
                   new Point(5,currentFrame.cols()/2), //currentFrame.rows()/2 currentFrame.cols()/2
-                  Core.FONT_HERSHEY_TRIPLEX , 1/*new Double(1)*/, new Scalar(0,0,255));
+                  Core.FONT_HERSHEY_TRIPLEX , new Double(1), new Scalar(0,0,255));
 
                 if(jCheckBoxSave.isSelected())
                 {
